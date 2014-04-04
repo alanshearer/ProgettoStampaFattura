@@ -198,5 +198,39 @@ namespace ProgettoStampaFatture
             pdfGenerator.GeneraPDFFattura(fatturaToPass);
 
         }
+
+        private void stampaFatturaButton_Click(object sender, EventArgs e)
+        {
+            PDFGenerator pdfGenerator = new PDFGenerator();
+            Fattura fatturaToPass = new Fattura();
+            fatturaToPass.Data = dateTimePicker1.Value;
+            fatturaToPass.Causale = causaleTextBox.Text;
+            fatturaToPass.Intestatario = intestazioneFatturaTextBox.Text;
+            Int64 numeroFattura = 0;
+            Int64.TryParse(numeroFatturaTextBox.Text, out numeroFattura);
+            fatturaToPass.Numero = numeroFattura;
+            DataGridViewRowCollection dgvrCollection = dataGridView1.Rows;
+            foreach (DataGridViewRow dgvRow in dgvrCollection)
+            {
+                if ((dgvRow.Cells[0].Value != null))
+                {
+                    Trasporto trasportoTemp = new Trasporto();
+                    trasportoTemp.Bolla = dgvRow.Cells[0].Value.ToString();
+                    trasportoTemp.Provincia = dgvRow.Cells[1].Value.ToString();
+                    trasportoTemp.Data = DateTime.Parse(dgvRow.Cells[2].Value.ToString());
+                    trasportoTemp.ValoreTrasporto = float.Parse(dgvRow.Cells[3].Value.ToString());
+                    trasportoTemp.PercentualeNolo = float.Parse(dgvRow.Cells[4].Value.ToString());
+                    trasportoTemp.Imponibile = float.Parse(dgvRow.Cells[5].Value.ToString());
+                    trasportoTemp.PercentualeIVA = float.Parse(dgvRow.Cells[6].Value.ToString());
+                    trasportoTemp.ImportoIVA = float.Parse(dgvRow.Cells[7].Value.ToString());
+                    trasportoTemp.TotaleCorrispettivo = float.Parse(dgvRow.Cells[8].Value.ToString());
+
+                    fatturaToPass.Trasporti.Add(trasportoTemp);
+                }
+
+            }
+
+            pdfGenerator.StampaFattura(fatturaToPass);
+        }
     }
 }

@@ -3,6 +3,7 @@ using iTextSharp.text.pdf;
 using ProgettoStampaFatture.Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,11 @@ namespace ProgettStampaFatture.PDFGenerator
         public const float tableWidth = 540f;
         public const int tableWidthPercentage = 90;
 
-        public void GeneraPDFFattura(Fattura fattura, Boolean stampa = false)
+        public const float SpacingBefore = 10f;
+        public const float SpacingAfter = 10f;
+
+
+        public String GeneraPDFFattura(Fattura fattura, Boolean stampa = false)
         {
             String NomeFattura = "Fattura";
             if (fattura.Data != null)
@@ -29,9 +34,13 @@ namespace ProgettStampaFatture.PDFGenerator
 
             doc.Open();
             doc.Add(CreateTableIntestazione());
+            doc.Add(CreateTableOggetto(fattura));
             doc.Add(CreateTableFromTrasportiList(fattura.Trasporti));
+            doc.Add(CreateTableConclusione(fattura, writer));
             //doc.Add();
             doc.Close();
+
+            return DesktopFolder + "\\" + NomeFattura + ".pdf";
         }
 
 
@@ -47,6 +56,9 @@ namespace ProgettStampaFatture.PDFGenerator
             float[] intestazioneWidths = new float[] { 100f, 440f };
 
             intestazioneTable.SetWidths(intestazioneWidths);
+
+            intestazioneTable.SpacingAfter = SpacingAfter;
+            intestazioneTable.SpacingBefore = SpacingBefore;
 
             PdfPCell cell;
 
@@ -100,6 +112,127 @@ namespace ProgettStampaFatture.PDFGenerator
 
         }
 
+        public static PdfPTable CreateTableOggetto(Fattura fatturaToParse)
+        {
+            PdfPTable oggettoTable = new PdfPTable(4);
+
+
+            oggettoTable.TotalWidth = tableWidth;
+            oggettoTable.WidthPercentage = tableWidthPercentage;
+            oggettoTable.LockedWidth = true;
+
+            float[] oggettoWidths = new float[] { 90f, 90f, 90f, 270f };
+
+            oggettoTable.SetWidths(oggettoWidths);
+
+
+            oggettoTable.SpacingBefore = SpacingBefore;
+            oggettoTable.SpacingAfter = SpacingAfter;
+
+            Font helvetica9 = new Font(Font.FontFamily.HELVETICA, 9f, Font.NORMAL);
+
+            Paragraph par1 = new Paragraph("Numero", helvetica9);
+            Paragraph par2 = new Paragraph("Data", helvetica9);
+            Paragraph par3 = new Paragraph("Spett.le", helvetica9);
+            Paragraph par4 = new Paragraph("Causale", helvetica9);
+
+
+
+            PdfPCell cell;
+
+            cell = new PdfPCell();
+            cell.Border = Rectangle.NO_BORDER;
+            cell.AddElement(par1);
+
+            oggettoTable.AddCell(cell);
+
+            String numeroFattura = "";
+            if ((fatturaToParse != null) || (fatturaToParse.Numero != 0))
+                numeroFattura = fatturaToParse.Numero.ToString();
+
+            cell = new PdfPCell(new Phrase(numeroFattura, helvetica9));
+            cell.Border = Rectangle.NO_BORDER;
+
+            oggettoTable.AddCell(cell);
+
+            cell = new PdfPCell(par3);
+            cell.Border = Rectangle.NO_BORDER;
+
+            oggettoTable.AddCell(cell);
+
+            cell = new PdfPCell();
+            cell.BackgroundColor = new BaseColor(210, 210, 210);
+            cell.Rowspan = 4;
+
+            String intestatario = "";
+
+            if ((fatturaToParse != null) || (fatturaToParse.Intestatario != null))
+                intestatario = fatturaToParse.Intestatario;
+            cell.AddElement(new Phrase(intestatario, helvetica9));
+
+            oggettoTable.AddCell(cell);
+
+
+
+            cell = new PdfPCell(par2);
+            cell.Border = Rectangle.NO_BORDER;
+
+            oggettoTable.AddCell(cell);
+
+            cell = new PdfPCell();
+            cell.Border = Rectangle.NO_BORDER;
+
+            String data = "";
+
+            if ((fatturaToParse != null) || (fatturaToParse.Data != null))
+                data = fatturaToParse.Data.ToShortDateString();
+            cell.AddElement(new Phrase(data, helvetica9));
+
+            oggettoTable.AddCell(cell);
+
+            cell = new PdfPCell();
+            cell.Border = Rectangle.NO_BORDER;
+            oggettoTable.AddCell(cell);
+
+            cell = new PdfPCell();
+            cell.Border = Rectangle.NO_BORDER;
+
+            cell.Colspan = 3;
+
+            oggettoTable.AddCell(cell);
+
+            cell = new PdfPCell();
+            cell.Border = Rectangle.NO_BORDER;
+
+            cell.Colspan = 3;
+
+            oggettoTable.AddCell(cell);
+
+
+            cell = new PdfPCell();
+            cell.Border = Rectangle.NO_BORDER;
+
+            cell.AddElement(par4);
+
+            oggettoTable.AddCell(cell);
+
+            cell = new PdfPCell();
+            cell.Border = Rectangle.NO_BORDER;
+
+            cell.Colspan = 4;
+
+            String causale = "";
+
+            if ((fatturaToParse != null) || (fatturaToParse.Causale != null))
+                causale = fatturaToParse.Causale;
+
+            cell.AddElement(new Phrase(causale, helvetica9));
+
+            oggettoTable.AddCell(cell);
+
+            return oggettoTable;
+        }
+
         public static PdfPTable CreateTableFromTrasportiList(List<Trasporto> listToParse)
         {
             PdfPTable trasportiListTable = new PdfPTable(9);
@@ -112,9 +245,8 @@ namespace ProgettStampaFatture.PDFGenerator
 
             trasportiListTable.SetWidths(trasportiListTableWidths);
 
-            trasportiListTable.SpacingBefore = 10f;
-            trasportiListTable.SpacingAfter = 10f;
-           // table.HeaderRows = 1;
+            trasportiListTable.SpacingBefore = SpacingBefore;
+            trasportiListTable.SpacingAfter = SpacingAfter;
             
 
             PdfPCell cell;
@@ -129,45 +261,27 @@ namespace ProgettStampaFatture.PDFGenerator
                 cell.BackgroundColor = new BaseColor(180, 180, 180);
                 trasportiListTable.AddCell(cell);
             }
-            //cell = new PdfPCell(new Phrase("Bolla"));
-            //table.AddCell(cell);
-            //cell = new PdfPCell(new Phrase("Pr."));
-            //table.AddCell(cell);
-            //cell = new PdfPCell(new Phrase("Data"));
-            //table.AddCell(cell);
-            //cell = new PdfPCell(new Phrase("Valore\nTrasporto"));
-            //table.AddCell(cell);
-            //cell = new PdfPCell(new Phrase("%Nolo"));
-            //table.AddCell(cell);
-            //cell = new PdfPCell(new Phrase("Imponibile"));
-            //table.AddCell(cell);
-            //cell = new PdfPCell(new Phrase("%IVA"));
-            //table.AddCell(cell);
-            //cell = new PdfPCell(new Phrase("Importo\nIVA"));
-            //table.AddCell(cell);
-            //cell = new PdfPCell(new Phrase("Totale\nCorrispettivo"));
-            //table.AddCell(cell);
-
+          
 
             foreach (Trasporto trasportoTemp in listToParse)
             {
-                cell = new PdfPCell(new Phrase(trasportoTemp.Bolla.ToString()));
+                cell = new PdfPCell(new Phrase(trasportoTemp.Bolla.ToString(), helvetica10));
                 trasportiListTable.AddCell(cell);
-                cell = new PdfPCell(new Phrase(trasportoTemp.Provincia.ToString()));
+                cell = new PdfPCell(new Phrase(trasportoTemp.Provincia.ToString(), helvetica10));
                 trasportiListTable.AddCell(cell);
-                cell = new PdfPCell(new Phrase(trasportoTemp.Data.ToShortDateString()));
+                cell = new PdfPCell(new Phrase(trasportoTemp.Data.ToShortDateString(), helvetica10));
                 trasportiListTable.AddCell(cell);
-                cell = new PdfPCell(new Phrase(trasportoTemp.ValoreTrasporto.ToString("0.00")));
+                cell = new PdfPCell(new Phrase(trasportoTemp.ValoreTrasporto.ToString("0.00\\€"), helvetica10));
                 trasportiListTable.AddCell(cell);
-                cell = new PdfPCell(new Phrase(trasportoTemp.PercentualeNolo.ToString("0.00")));
+                cell = new PdfPCell(new Phrase(trasportoTemp.PercentualeNolo.ToString("0.00\\%"), helvetica10));
                 trasportiListTable.AddCell(cell);
-                cell = new PdfPCell(new Phrase(trasportoTemp.Imponibile.ToString("0.00")));
+                cell = new PdfPCell(new Phrase(trasportoTemp.Imponibile.ToString("0.00\\€"), helvetica10));
                 trasportiListTable.AddCell(cell);
-                cell = new PdfPCell(new Phrase(trasportoTemp.PercentualeIVA.ToString("0.00")));
+                cell = new PdfPCell(new Phrase(trasportoTemp.PercentualeIVA.ToString("0.00\\%"), helvetica10));
                 trasportiListTable.AddCell(cell);
-                cell = new PdfPCell(new Phrase(trasportoTemp.ImportoIVA.ToString("0.00")));
+                cell = new PdfPCell(new Phrase(trasportoTemp.ImportoIVA.ToString("0.00\\€"), helvetica10));
                 trasportiListTable.AddCell(cell);
-                cell = new PdfPCell(new Phrase(trasportoTemp.TotaleCorrispettivo.ToString("0.00")));
+                cell = new PdfPCell(new Phrase(trasportoTemp.TotaleCorrispettivo.ToString("0.00\\€"), helvetica10));
                 trasportiListTable.AddCell(cell);
             }
 
@@ -176,174 +290,220 @@ namespace ProgettStampaFatture.PDFGenerator
 
         }
 
-
-        public static PdfPTable createFirstTable()
+        public static PdfPTable CreateTableConclusione(Fattura fatturaToParse, PdfWriter writer)
         {
-            // a table with three columns
-            PdfPTable table = new PdfPTable(3);
-            table.SpacingBefore = 10f;
-            table.SpacingAfter = 10f;
+            PdfPTable conclusioneTable = new PdfPTable(6);
 
-            // the cell object
+            conclusioneTable.TotalWidth = tableWidth;
+            conclusioneTable.WidthPercentage = tableWidthPercentage;
+            conclusioneTable.LockedWidth = true;
+
+            float[] conclusioneTableWidths = new float[] { 90f, 90f, 90f, 90f, 90f, 90f };
+
+            conclusioneTable.SetWidths(conclusioneTableWidths);
+
+            conclusioneTable.SpacingBefore = SpacingBefore;
+            conclusioneTable.SpacingAfter = SpacingAfter;
+
+
+            Font helvetica9 = new Font(Font.FontFamily.HELVETICA, 9f, Font.NORMAL);
+
+            Paragraph modalita = new Paragraph("MODALITA' DI PAGAMENTO: RIMESSA DIRETTA A 30GG. DATA FATTURA CON:", helvetica9);
+            Paragraph bonifico = new Paragraph("BONIFICO", helvetica9);
+            Paragraph contanti = new Paragraph("CONTANTI", helvetica9);
+            Paragraph assegno = new Paragraph("ASSEGNO", helvetica9);
+            Paragraph iban = new Paragraph("IBAN PER BONIFICO: IT 10 M 01030 03421 000007804964", helvetica9);
+            Paragraph ccn = new Paragraph("CCN° 000007804964", helvetica9);
+            Paragraph istituto = new Paragraph("ISTITUTO BANCARIO: MONTE DEI PASCHI DI SIENA AG. 21", helvetica9);
+            Paragraph abi = new Paragraph("ABI: 01030", helvetica9);
+            Paragraph cab = new Paragraph("CAB: 03421", helvetica9);
+            Paragraph cin = new Paragraph("CIN: M", helvetica9);
+            Paragraph intestatario = new Paragraph("INTESTATO A: AUTOTRASPORTI NEAPOLIS SOCIETA' COOPERATIVA", helvetica9);
+
+            Paragraph totali = new Paragraph("TOTALI GENERALI", helvetica9);
+
             PdfPCell cell;
-            // we add a cell with colspan 3
-            cell = new PdfPCell(new Phrase("Cell with colspan 3"));
+
+            float valoreTrasportoTotale = 0, imponibileTotale = 0, importoIvaTotale = 0, totaleCorrispettivoTotale = 0;
+
+            if (fatturaToParse.Trasporti != null)
+            {
+                foreach (Trasporto trasportoTemp in fatturaToParse.Trasporti)
+                {
+                    valoreTrasportoTotale += trasportoTemp.ValoreTrasporto;
+                    imponibileTotale += trasportoTemp.Imponibile;
+                    importoIvaTotale += trasportoTemp.ImportoIVA;
+                    totaleCorrispettivoTotale += trasportoTemp.TotaleCorrispettivo;
+                }
+            }
+
+            Paragraph valoreTrasportoTot = new Paragraph("Valore \n Trasporto", helvetica9);
+            Paragraph imponibileTot = new Paragraph("Imponibile", helvetica9);
+            Paragraph importoIvaTot = new Paragraph("Importo \n IVA", helvetica9);
+            Paragraph totaleCorrispettivoTot = new Paragraph("Totale \n Corrispettivo", helvetica9);
+
+
+            Paragraph valoreTrasportoTotalePar = new Paragraph(valoreTrasportoTotale.ToString("0.00\\€"), helvetica9);
+            Paragraph imponibileTotalePar = new Paragraph(imponibileTotale.ToString("0.00\\€"), helvetica9);
+            Paragraph importoIvaTotalePar = new Paragraph(importoIvaTotale.ToString("0.00\\€"), helvetica9);
+            Paragraph totaleCorrispettivoTotalePar = new Paragraph(totaleCorrispettivoTotale.ToString("0.00\\€"), helvetica9);
+
+            cell = new PdfPCell(modalita);
+            cell.Border = Rectangle.TOP_BORDER;
+            cell.Colspan = 6;
+            conclusioneTable.AddCell(cell);            
+
+
+            //PdfTemplate template = writer.DirectContent.CreateTemplate(20,20);
+            cell = new PdfPCell(new Phrase(" "));
+            cell.Border = Rectangle.BOX;
+            conclusioneTable.AddCell(cell);
+
+
+            //PdfTemplate template = writer.DirectContent.CreateTemplate(20,20);
+            cell = new PdfPCell(new Phrase(" "));
+            cell.Border = Rectangle.BOX;
+            conclusioneTable.AddCell(cell);
+
+  
+             //PdfTemplate template = writer.DirectContent.CreateTemplate(20,20);
+            cell = new PdfPCell(new Phrase(" "));
+            cell.Border = Rectangle.BOX;
+            conclusioneTable.AddCell(cell);
+
+            cell = new PdfPCell();
+            cell.Border = Rectangle.NO_BORDER;
             cell.Colspan = 3;
-            table.AddCell(cell);
-            // now we add a cell with rowspan 2
-            cell = new PdfPCell(new Phrase("Cell with rowspan 2"));
-            cell.Rowspan = 2;
-            table.AddCell(cell);
-            // we add the four remaining cells with addCell()
-            table.AddCell("row 1; cell 1");
-            table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2");
-            table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2"); table.AddCell("row 1; cell 2");
-            table.AddCell("row 2; cell 1");
-            table.AddCell("row 2; cell 2");
-            return table;
+            conclusioneTable.AddCell(cell);
+
+            cell = new PdfPCell(bonifico);
+            cell.Border = Rectangle.NO_BORDER;
+            conclusioneTable.AddCell(cell);
+
+            cell = new PdfPCell(contanti);
+            cell.Border = Rectangle.NO_BORDER;
+            conclusioneTable.AddCell(cell);
+
+            cell = new PdfPCell(assegno);
+            cell.Border = Rectangle.NO_BORDER;
+            conclusioneTable.AddCell(cell);
+
+            cell = new PdfPCell();
+            cell.Border = Rectangle.NO_BORDER;
+            cell.Colspan = 3;
+            conclusioneTable.AddCell(cell);
+
+            cell = new PdfPCell(iban);
+            cell.Border = Rectangle.NO_BORDER;
+            cell.Colspan = 6;
+            conclusioneTable.AddCell(cell);
+
+            cell = new PdfPCell(ccn);
+            cell.Border = Rectangle.NO_BORDER;
+            cell.Colspan = 2;
+            conclusioneTable.AddCell(cell);
+
+            cell = new PdfPCell(istituto);
+            cell.Border = Rectangle.NO_BORDER;
+            cell.Colspan = 4;
+            conclusioneTable.AddCell(cell);
+
+            cell = new PdfPCell(abi);
+            cell.Border = Rectangle.NO_BORDER;
+            conclusioneTable.AddCell(cell);
+
+            cell = new PdfPCell(cab);
+            cell.Border = Rectangle.NO_BORDER;
+            conclusioneTable.AddCell(cell);
+
+            cell = new PdfPCell(cin);
+            cell.Border = Rectangle.NO_BORDER;
+            conclusioneTable.AddCell(cell);
+
+            cell = new PdfPCell();
+            cell.Border = Rectangle.NO_BORDER;
+            cell.Colspan = 3;
+            conclusioneTable.AddCell(cell);
+
+            cell = new PdfPCell(intestatario);
+            cell.Border = Rectangle.BOTTOM_BORDER;
+            cell.Colspan = 6;
+            conclusioneTable.AddCell(cell);
+
+
+            cell = new PdfPCell();
+            cell.Border = Rectangle.NO_BORDER;
+            cell.Colspan = 2;
+            conclusioneTable.AddCell(cell);
+
+
+
+            //inserire qui gli ultimi dettagli
+
+            cell = new PdfPCell(valoreTrasportoTot);
+            cell.Border = Rectangle.NO_BORDER;
+            conclusioneTable.AddCell(cell);
+
+            cell = new PdfPCell(imponibileTot);
+            cell.Border = Rectangle.NO_BORDER;
+            conclusioneTable.AddCell(cell);
+
+            cell = new PdfPCell(importoIvaTot);
+            cell.Border = Rectangle.NO_BORDER;
+            conclusioneTable.AddCell(cell);
+
+            cell = new PdfPCell(totaleCorrispettivoTot);
+            cell.Border = Rectangle.NO_BORDER;
+            conclusioneTable.AddCell(cell);
+
+            cell = new PdfPCell(totali);
+            cell.Border = Rectangle.BOTTOM_BORDER;
+            cell.BackgroundColor = new BaseColor(210, 210, 210);
+            cell.Colspan = 2;
+            conclusioneTable.AddCell(cell);
+
+            cell = new PdfPCell(valoreTrasportoTotalePar);
+            cell.Border = Rectangle.BOTTOM_BORDER;
+            cell.BackgroundColor = new BaseColor(210, 210, 210); 
+            conclusioneTable.AddCell(cell);
+
+            cell = new PdfPCell(imponibileTotalePar);
+            cell.Border = Rectangle.BOTTOM_BORDER;
+            cell.BackgroundColor = new BaseColor(210, 210, 210); 
+            conclusioneTable.AddCell(cell);
+
+            cell = new PdfPCell(importoIvaTotalePar);
+            cell.Border = Rectangle.BOTTOM_BORDER;
+            cell.BackgroundColor = new BaseColor(210, 210, 210); 
+            conclusioneTable.AddCell(cell);
+
+            cell = new PdfPCell(totaleCorrispettivoTotalePar);
+            cell.Border = Rectangle.BOTTOM_BORDER;
+            cell.BackgroundColor = new BaseColor(210, 210, 210); 
+            conclusioneTable.AddCell(cell);
+
+            return conclusioneTable;
         }
+
+
 
         public void StampaFattura(Fattura fattura)
         {
-            GeneraPDFFattura(fattura, true);
+            String fatturaGenerata = GeneraPDFFattura(fattura, true);
+            Process.Start(fatturaGenerata);
+        }
+
+        public static void drawRectangle(PdfContentByte content, float width, float height)
+        {
+            content.SaveState();
+            PdfGState state = new PdfGState();
+            state.FillOpacity = 0.6f;
+            content.SetGState(state);
+            content.SetRGBColorFill(0xFF, 0xFF, 0xFF);
+            content.SetLineWidth(3);
+            content.Rectangle(0, 0, width, height);
+            content.FillStroke();
+            content.RestoreState();
         }
     }
 }
