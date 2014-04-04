@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ProgettoStampaFatture.Model;
+using ProgettStampaFatture.PDFGenerator;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,7 +17,7 @@ namespace ProgettoStampaFatture
         public Form1()
         {
             InitializeComponent();
-          
+          this.dataGridView1.DataError +=dataGridView1_DataError;
 
         }
 
@@ -34,12 +36,45 @@ namespace ProgettoStampaFatture
 
         }
 
+        private void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs anError)
+        {
+
+            //gestisci errore nell'inserimento di un valore
+            DataGridView view = (DataGridView)sender;
+
+            if ((anError.Context.HasFlag(DataGridViewDataErrorContexts.Commit)) 
+                || (anError.Context.HasFlag(DataGridViewDataErrorContexts.CurrentCellChange))
+                || (anError.Context.HasFlag(DataGridViewDataErrorContexts.Parsing)))
+            {
+                if (view.Rows[anError.RowIndex].Cells[anError.ColumnIndex].ValueType == typeof(float))
+                {
+                    MessageBox.Show("Inserisci un valore numerico.");
+                    view.Rows[anError.RowIndex].Cells[anError.ColumnIndex].Value = 0;
+                }
+                if (view.Rows[anError.RowIndex].Cells[anError.ColumnIndex].ValueType == typeof(DateTime))
+                {
+                    MessageBox.Show("Inserisci una data valida nel formato GG/MM/AAAA.");
+                    view.Rows[anError.RowIndex].Cells[anError.ColumnIndex].Value = new DateTime();
+                }
+            }
+            if (anError.Context.HasFlag(DataGridViewDataErrorContexts.LeaveControl))
+            {
+                MessageBox.Show("Errore nel rilascio del valore");
+            }
+
+            if ((anError.Exception) is ConstraintException)
+            {
+                view.Rows[anError.RowIndex].ErrorText = "Errore";
+                view.Rows[anError.RowIndex].Cells[anError.ColumnIndex].ErrorText = "Errore";
+
+
+                anError.ThrowException = false;
+            }
+        }
+
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            //String currentVal = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].FormattedValue.ToString();
-            //if ((currentVal == "0.00") || (currentVal == "0,00") || (currentVal == "0"))
-            //    this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex]. = true;
-            
+           
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -118,8 +153,49 @@ namespace ProgettoStampaFatture
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+
+        private void dataFatturaTextBox_TextChanged(object sender, EventArgs e)
         {
+
+        }
+
+        private void numeroFatturaTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void generaFatturaButton_Click(object sender, EventArgs e)
+        {
+            PDFGenerator pdfGenerator = new PDFGenerator();
+            Fattura fatturaToPass = new Fattura();
+            fatturaToPass.Data = dateTimePicker1.Value;
+            fatturaToPass.Causale = causaleTextBox.Text;
+            fatturaToPass.Intestatario = intestazioneFatturaTextBox.Text;
+            Int64 numeroFattura = 0;
+            Int64.TryParse(numeroFatturaTextBox.Text, out numeroFattura);
+            fatturaToPass.Numero = numeroFattura;
+            DataGridViewRowCollection dgvrCollection = dataGridView1.Rows;
+            foreach (DataGridViewRow dgvRow in dgvrCollection)
+            {
+                if ((dgvRow.Cells[0].Value != null))
+                {
+                    Trasporto trasportoTemp = new Trasporto();
+                    trasportoTemp.Bolla = dgvRow.Cells[0].Value.ToString();
+                    trasportoTemp.Provincia = dgvRow.Cells[1].Value.ToString();
+                    trasportoTemp.Data = DateTime.Parse(dgvRow.Cells[2].Value.ToString());
+                    trasportoTemp.ValoreTrasporto = float.Parse(dgvRow.Cells[3].Value.ToString());
+                    trasportoTemp.PercentualeNolo = float.Parse(dgvRow.Cells[4].Value.ToString());
+                    trasportoTemp.Imponibile = float.Parse(dgvRow.Cells[5].Value.ToString());
+                    trasportoTemp.PercentualeIVA = float.Parse(dgvRow.Cells[6].Value.ToString());
+                    trasportoTemp.ImportoIVA = float.Parse(dgvRow.Cells[7].Value.ToString());
+                    trasportoTemp.TotaleCorrispettivo = float.Parse(dgvRow.Cells[8].Value.ToString());
+
+                    fatturaToPass.Trasporti.Add(trasportoTemp);
+                }
+
+            }
+
+            pdfGenerator.GeneraPDFFattura(fatturaToPass);
 
         }
     }

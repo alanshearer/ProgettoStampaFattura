@@ -55,25 +55,27 @@
             this.stampaFatturaButton = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
-            this.dataFatturaTextBox = new System.Windows.Forms.TextBox();
             this.numeroFatturaTextBox = new System.Windows.Forms.TextBox();
+            this.causaleTextBox = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trasportoBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // intestazioneFatturaTextBox
             // 
-            this.intestazioneFatturaTextBox.Location = new System.Drawing.Point(530, 30);
+            this.intestazioneFatturaTextBox.Location = new System.Drawing.Point(530, 23);
             this.intestazioneFatturaTextBox.Multiline = true;
             this.intestazioneFatturaTextBox.Name = "intestazioneFatturaTextBox";
-            this.intestazioneFatturaTextBox.Size = new System.Drawing.Size(338, 87);
+            this.intestazioneFatturaTextBox.Size = new System.Drawing.Size(338, 61);
             this.intestazioneFatturaTextBox.TabIndex = 0;
             this.intestazioneFatturaTextBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(382, 33);
+            this.label1.Location = new System.Drawing.Point(377, 26);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(95, 13);
             this.label1.TabIndex = 1;
@@ -260,7 +262,7 @@
             this.generaFatturaButton.TabIndex = 12;
             this.generaFatturaButton.Text = "Genera Fattura";
             this.generaFatturaButton.UseVisualStyleBackColor = true;
-            this.generaFatturaButton.Click += new System.EventHandler(this.button1_Click);
+            this.generaFatturaButton.Click += new System.EventHandler(this.generaFatturaButton_Click);
             // 
             // stampaFatturaButton
             // 
@@ -283,34 +285,53 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(30, 71);
+            this.label8.Location = new System.Drawing.Point(30, 66);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(30, 13);
             this.label8.TabIndex = 15;
             this.label8.Text = "Data";
-            // 
-            // dataFatturaTextBox
-            // 
-            this.dataFatturaTextBox.BackColor = System.Drawing.SystemColors.HighlightText;
-            this.dataFatturaTextBox.Location = new System.Drawing.Point(140, 64);
-            this.dataFatturaTextBox.Name = "dataFatturaTextBox";
-            this.dataFatturaTextBox.Size = new System.Drawing.Size(118, 20);
-            this.dataFatturaTextBox.TabIndex = 17;
             // 
             // numeroFatturaTextBox
             // 
             this.numeroFatturaTextBox.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.numeroFatturaTextBox.Location = new System.Drawing.Point(140, 23);
             this.numeroFatturaTextBox.Name = "numeroFatturaTextBox";
-            this.numeroFatturaTextBox.Size = new System.Drawing.Size(118, 20);
+            this.numeroFatturaTextBox.Size = new System.Drawing.Size(189, 20);
             this.numeroFatturaTextBox.TabIndex = 16;
+            this.numeroFatturaTextBox.TextChanged += new System.EventHandler(this.numeroFatturaTextBox_TextChanged);
+            // 
+            // causaleTextBox
+            // 
+            this.causaleTextBox.BackColor = System.Drawing.SystemColors.HighlightText;
+            this.causaleTextBox.Location = new System.Drawing.Point(140, 95);
+            this.causaleTextBox.Name = "causaleTextBox";
+            this.causaleTextBox.Size = new System.Drawing.Size(728, 20);
+            this.causaleTextBox.TabIndex = 19;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(30, 102);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(45, 13);
+            this.label9.TabIndex = 18;
+            this.label9.Text = "Causale";
+            // 
+            // dateTimePicker1
+            // 
+            this.dateTimePicker1.Location = new System.Drawing.Point(140, 60);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.Size = new System.Drawing.Size(189, 20);
+            this.dateTimePicker1.TabIndex = 20;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(900, 443);
-            this.Controls.Add(this.dataFatturaTextBox);
+            this.Controls.Add(this.dateTimePicker1);
+            this.Controls.Add(this.causaleTextBox);
+            this.Controls.Add(this.label9);
             this.Controls.Add(this.numeroFatturaTextBox);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
@@ -366,8 +387,10 @@
         private System.Windows.Forms.Button stampaFatturaButton;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TextBox dataFatturaTextBox;
         private System.Windows.Forms.TextBox numeroFatturaTextBox;
+        private System.Windows.Forms.TextBox causaleTextBox;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.DateTimePicker dateTimePicker1;
     }
 }
 
