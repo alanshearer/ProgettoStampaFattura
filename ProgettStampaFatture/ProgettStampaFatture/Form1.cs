@@ -36,6 +36,9 @@ namespace ProgettoStampaFatture
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
+            //String currentVal = this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex].FormattedValue.ToString();
+            //if ((currentVal == "0.00") || (currentVal == "0,00") || (currentVal == "0"))
+            //    this.dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex]. = true;
             
         }
 

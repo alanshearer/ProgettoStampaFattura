@@ -29,9 +29,19 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.intestazioneFatturaTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.bollaDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.provinciaDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.valoreTrasportoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.percentualeNoloDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.imponibileDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.percentualeIVADataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.importoIVADataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.totaleCorrispettivoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.trasportoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -43,33 +53,27 @@
             this.importoIvaTotale = new System.Windows.Forms.TextBox();
             this.generaFatturaButton = new System.Windows.Forms.Button();
             this.stampaFatturaButton = new System.Windows.Forms.Button();
-            this.bollaDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.provinciaDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.valoreTrasportoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.percentualeNoloDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.imponibileDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.percentualeIVADataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.importoIVADataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.totaleCorrispettivoDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.trasportoBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.dataFatturaTextBox = new System.Windows.Forms.TextBox();
+            this.numeroFatturaTextBox = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trasportoBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
-            // textBox1
+            // intestazioneFatturaTextBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(341, 30);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(527, 87);
-            this.textBox1.TabIndex = 0;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            this.intestazioneFatturaTextBox.Location = new System.Drawing.Point(530, 30);
+            this.intestazioneFatturaTextBox.Multiline = true;
+            this.intestazioneFatturaTextBox.Name = "intestazioneFatturaTextBox";
+            this.intestazioneFatturaTextBox.Size = new System.Drawing.Size(338, 87);
+            this.intestazioneFatturaTextBox.TabIndex = 0;
+            this.intestazioneFatturaTextBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(137, 33);
+            this.label1.Location = new System.Drawing.Point(382, 33);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(95, 13);
             this.label1.TabIndex = 1;
@@ -99,6 +103,71 @@
             this.dataGridView1.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView1_CellFormatting);
             this.dataGridView1.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellValueChanged);
             this.dataGridView1.Enter += new System.EventHandler(this.dataGridView1_Enter);
+            // 
+            // bollaDataGridViewTextBoxColumn
+            // 
+            this.bollaDataGridViewTextBoxColumn.DataPropertyName = "Bolla";
+            this.bollaDataGridViewTextBoxColumn.HeaderText = "Bolla";
+            this.bollaDataGridViewTextBoxColumn.Name = "bollaDataGridViewTextBoxColumn";
+            // 
+            // provinciaDataGridViewTextBoxColumn
+            // 
+            this.provinciaDataGridViewTextBoxColumn.DataPropertyName = "Provincia";
+            this.provinciaDataGridViewTextBoxColumn.HeaderText = "Pr.";
+            this.provinciaDataGridViewTextBoxColumn.Name = "provinciaDataGridViewTextBoxColumn";
+            this.provinciaDataGridViewTextBoxColumn.Width = 30;
+            // 
+            // dataDataGridViewTextBoxColumn
+            // 
+            this.dataDataGridViewTextBoxColumn.DataPropertyName = "Data";
+            this.dataDataGridViewTextBoxColumn.HeaderText = "Data";
+            this.dataDataGridViewTextBoxColumn.Name = "dataDataGridViewTextBoxColumn";
+            this.dataDataGridViewTextBoxColumn.Width = 70;
+            // 
+            // valoreTrasportoDataGridViewTextBoxColumn
+            // 
+            this.valoreTrasportoDataGridViewTextBoxColumn.DataPropertyName = "ValoreTrasporto";
+            this.valoreTrasportoDataGridViewTextBoxColumn.HeaderText = "Valore Trasporto";
+            this.valoreTrasportoDataGridViewTextBoxColumn.Name = "valoreTrasportoDataGridViewTextBoxColumn";
+            // 
+            // percentualeNoloDataGridViewTextBoxColumn
+            // 
+            this.percentualeNoloDataGridViewTextBoxColumn.DataPropertyName = "PercentualeNolo";
+            this.percentualeNoloDataGridViewTextBoxColumn.HeaderText = "%Nolo";
+            this.percentualeNoloDataGridViewTextBoxColumn.Name = "percentualeNoloDataGridViewTextBoxColumn";
+            this.percentualeNoloDataGridViewTextBoxColumn.Width = 40;
+            // 
+            // imponibileDataGridViewTextBoxColumn
+            // 
+            this.imponibileDataGridViewTextBoxColumn.DataPropertyName = "Imponibile";
+            this.imponibileDataGridViewTextBoxColumn.HeaderText = "Imponibile";
+            this.imponibileDataGridViewTextBoxColumn.Name = "imponibileDataGridViewTextBoxColumn";
+            this.imponibileDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // percentualeIVADataGridViewTextBoxColumn
+            // 
+            this.percentualeIVADataGridViewTextBoxColumn.DataPropertyName = "PercentualeIVA";
+            this.percentualeIVADataGridViewTextBoxColumn.HeaderText = "%IVA";
+            this.percentualeIVADataGridViewTextBoxColumn.Name = "percentualeIVADataGridViewTextBoxColumn";
+            this.percentualeIVADataGridViewTextBoxColumn.Width = 40;
+            // 
+            // importoIVADataGridViewTextBoxColumn
+            // 
+            this.importoIVADataGridViewTextBoxColumn.DataPropertyName = "ImportoIVA";
+            this.importoIVADataGridViewTextBoxColumn.HeaderText = "Importo IVA";
+            this.importoIVADataGridViewTextBoxColumn.Name = "importoIVADataGridViewTextBoxColumn";
+            this.importoIVADataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // totaleCorrispettivoDataGridViewTextBoxColumn
+            // 
+            this.totaleCorrispettivoDataGridViewTextBoxColumn.DataPropertyName = "TotaleCorrispettivo";
+            this.totaleCorrispettivoDataGridViewTextBoxColumn.HeaderText = "Totale Corrispettivo";
+            this.totaleCorrispettivoDataGridViewTextBoxColumn.Name = "totaleCorrispettivoDataGridViewTextBoxColumn";
+            this.totaleCorrispettivoDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // trasportoBindingSource
+            // 
+            this.trasportoBindingSource.DataSource = typeof(ProgettoStampaFatture.Model.Trasporto);
             // 
             // label2
             // 
@@ -202,76 +271,49 @@
             this.stampaFatturaButton.Text = "Stampa Fattura";
             this.stampaFatturaButton.UseVisualStyleBackColor = true;
             // 
-            // bollaDataGridViewTextBoxColumn
+            // label7
             // 
-            this.bollaDataGridViewTextBoxColumn.DataPropertyName = "Bolla";
-            this.bollaDataGridViewTextBoxColumn.HeaderText = "Bolla";
-            this.bollaDataGridViewTextBoxColumn.Name = "bollaDataGridViewTextBoxColumn";
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(30, 30);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(47, 13);
+            this.label7.TabIndex = 14;
+            this.label7.Text = "Numero:";
             // 
-            // provinciaDataGridViewTextBoxColumn
+            // label8
             // 
-            this.provinciaDataGridViewTextBoxColumn.DataPropertyName = "Provincia";
-            this.provinciaDataGridViewTextBoxColumn.HeaderText = "Pr.";
-            this.provinciaDataGridViewTextBoxColumn.Name = "provinciaDataGridViewTextBoxColumn";
-            this.provinciaDataGridViewTextBoxColumn.Width = 30;
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(30, 71);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(30, 13);
+            this.label8.TabIndex = 15;
+            this.label8.Text = "Data";
             // 
-            // dataDataGridViewTextBoxColumn
+            // dataFatturaTextBox
             // 
-            this.dataDataGridViewTextBoxColumn.DataPropertyName = "Data";
-            this.dataDataGridViewTextBoxColumn.HeaderText = "Data";
-            this.dataDataGridViewTextBoxColumn.Name = "dataDataGridViewTextBoxColumn";
-            this.dataDataGridViewTextBoxColumn.Width = 70;
+            this.dataFatturaTextBox.BackColor = System.Drawing.SystemColors.HighlightText;
+            this.dataFatturaTextBox.Location = new System.Drawing.Point(140, 64);
+            this.dataFatturaTextBox.Name = "dataFatturaTextBox";
+            this.dataFatturaTextBox.Size = new System.Drawing.Size(118, 20);
+            this.dataFatturaTextBox.TabIndex = 17;
             // 
-            // valoreTrasportoDataGridViewTextBoxColumn
+            // numeroFatturaTextBox
             // 
-            this.valoreTrasportoDataGridViewTextBoxColumn.DataPropertyName = "ValoreTrasporto";
-            this.valoreTrasportoDataGridViewTextBoxColumn.HeaderText = "Valore Trasporto";
-            this.valoreTrasportoDataGridViewTextBoxColumn.Name = "valoreTrasportoDataGridViewTextBoxColumn";
-            // 
-            // percentualeNoloDataGridViewTextBoxColumn
-            // 
-            this.percentualeNoloDataGridViewTextBoxColumn.DataPropertyName = "PercentualeNolo";
-            this.percentualeNoloDataGridViewTextBoxColumn.HeaderText = "%Nolo";
-            this.percentualeNoloDataGridViewTextBoxColumn.Name = "percentualeNoloDataGridViewTextBoxColumn";
-            this.percentualeNoloDataGridViewTextBoxColumn.Width = 40;
-            // 
-            // imponibileDataGridViewTextBoxColumn
-            // 
-            this.imponibileDataGridViewTextBoxColumn.DataPropertyName = "Imponibile";
-            this.imponibileDataGridViewTextBoxColumn.HeaderText = "Imponibile";
-            this.imponibileDataGridViewTextBoxColumn.Name = "imponibileDataGridViewTextBoxColumn";
-            this.imponibileDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // percentualeIVADataGridViewTextBoxColumn
-            // 
-            this.percentualeIVADataGridViewTextBoxColumn.DataPropertyName = "PercentualeIVA";
-            this.percentualeIVADataGridViewTextBoxColumn.HeaderText = "%IVA";
-            this.percentualeIVADataGridViewTextBoxColumn.Name = "percentualeIVADataGridViewTextBoxColumn";
-            this.percentualeIVADataGridViewTextBoxColumn.Width = 40;
-            // 
-            // importoIVADataGridViewTextBoxColumn
-            // 
-            this.importoIVADataGridViewTextBoxColumn.DataPropertyName = "ImportoIVA";
-            this.importoIVADataGridViewTextBoxColumn.HeaderText = "Importo IVA";
-            this.importoIVADataGridViewTextBoxColumn.Name = "importoIVADataGridViewTextBoxColumn";
-            this.importoIVADataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // totaleCorrispettivoDataGridViewTextBoxColumn
-            // 
-            this.totaleCorrispettivoDataGridViewTextBoxColumn.DataPropertyName = "TotaleCorrispettivo";
-            this.totaleCorrispettivoDataGridViewTextBoxColumn.HeaderText = "Totale Corrispettivo";
-            this.totaleCorrispettivoDataGridViewTextBoxColumn.Name = "totaleCorrispettivoDataGridViewTextBoxColumn";
-            this.totaleCorrispettivoDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // trasportoBindingSource
-            // 
-            this.trasportoBindingSource.DataSource = typeof(ProgettoStampaFatture.Model.Trasporto);
+            this.numeroFatturaTextBox.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.numeroFatturaTextBox.Location = new System.Drawing.Point(140, 23);
+            this.numeroFatturaTextBox.Name = "numeroFatturaTextBox";
+            this.numeroFatturaTextBox.Size = new System.Drawing.Size(118, 20);
+            this.numeroFatturaTextBox.TabIndex = 16;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(900, 443);
+            this.Controls.Add(this.dataFatturaTextBox);
+            this.Controls.Add(this.numeroFatturaTextBox);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.stampaFatturaButton);
             this.Controls.Add(this.generaFatturaButton);
             this.Controls.Add(this.totaleCorrispettivoTotale);
@@ -285,7 +327,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.intestazioneFatturaTextBox);
             this.Name = "Form1";
             this.Text = "Stampa Fatture";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -298,7 +340,7 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox intestazioneFatturaTextBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.BindingSource trasportoBindingSource;
@@ -322,6 +364,10 @@
         private System.Windows.Forms.TextBox importoIvaTotale;
         private System.Windows.Forms.Button generaFatturaButton;
         private System.Windows.Forms.Button stampaFatturaButton;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.TextBox dataFatturaTextBox;
+        private System.Windows.Forms.TextBox numeroFatturaTextBox;
     }
 }
 
