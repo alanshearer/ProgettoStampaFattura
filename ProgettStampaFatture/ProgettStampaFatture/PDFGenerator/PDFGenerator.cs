@@ -6,8 +6,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security;
+using System.Security.AccessControl;
+using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ProgettStampaFatture.PDFGenerator
 {
@@ -24,10 +28,36 @@ namespace ProgettStampaFatture.PDFGenerator
         {
             String NomeFattura = "Fattura";
             if (fattura.Data != null)
-                NomeFattura += fattura.Data.ToString().Replace("/", "");
+                NomeFattura += fattura.Data.ToString().Replace("/", "").Replace(" ", "").Replace(".", "").Replace(":", "");
 
-            var DesktopFolder = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            FileStream fs = new FileStream(DesktopFolder + "\\" + NomeFattura + ".pdf", FileMode.Create, FileAccess.Write, FileShare.None);
+            NomeFattura += ".pdf";
+
+            //String DesktopFolder = Environment.ExpandEnvironmentVariables("%USERPROFILE%") + @"\Desktop";
+
+            String DesktopFolder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            //String DesktopFolder = "C:\\";
+
+            //String CompleteFilePath = Path.Combine(DesktopFolder, NomeFattura);
+
+            //CompleteFilePath.Replace("\\", "/");
+
+            //MessageBox.Show(CompleteFilePath);
+
+
+
+
+            FileStream fs = null;
+            try
+            {
+                Directory.SetCurrentDirectory(DesktopFolder);
+
+                fs = File.Create(NomeFattura);
+                
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.StackTrace + e.Message, e.Message);
+            }
             Document doc = new Document(PageSize.A4);
 
             PdfWriter writer = PdfWriter.GetInstance(doc, fs);
@@ -37,10 +67,11 @@ namespace ProgettStampaFatture.PDFGenerator
             doc.Add(CreateTableOggetto(fattura));
             doc.Add(CreateTableFromTrasportiList(fattura.Trasporti));
             doc.Add(CreateTableConclusione(fattura, writer));
-            //doc.Add();
             doc.Close();
 
-            return DesktopFolder + "\\" + NomeFattura + ".pdf";
+            
+
+            return NomeFattura;
         }
 
 
@@ -76,19 +107,19 @@ namespace ProgettStampaFatture.PDFGenerator
 
 
             Font timesNewRoman11 = new Font(Font.FontFamily.TIMES_ROMAN, 11f, Font.BOLD);
-            Font helvetica9 = new Font(Font.FontFamily.HELVETICA, 9f, Font.NORMAL);
+            Font timesnewroman9 = new Font(Font.FontFamily.TIMES_ROMAN, 9f, Font.NORMAL);
 
             Paragraph par1 = new Paragraph("AUTOTRASPORTI NEAPOLIS – SOCIETA’ COOPERATIVA", timesNewRoman11);
 
-            Paragraph par2 = new Paragraph("SEDE LEGALE IN VIA S.BRIGIDA,51 – 80133 – NAPOLI", helvetica9);
+            Paragraph par2 = new Paragraph("SEDE LEGALE IN VIA S.BRIGIDA,51 – 80133 – NAPOLI", timesnewroman9);
 
-            Paragraph par3 = new Paragraph("ISCRITTA AL REGISTRO DELLE IMPRESE DI NAPOLI – PI e CF. : 05696451219", helvetica9);
+            Paragraph par3 = new Paragraph("ISCRITTA AL REGISTRO DELLE IMPRESE DI NAPOLI – PI e CF. : 05696451219", timesnewroman9);
 
-            Paragraph par4 = new Paragraph("ISCRITTA ALL’ALBO NAZIONALE DELLE COOPERATIVE A MUTUALITA’ PREVALENTE N°. A181519", helvetica9);
+            Paragraph par4 = new Paragraph("ISCRITTA ALL’ALBO NAZIONALE DELLE COOPERATIVE A MUTUALITA’ PREVALENTE N°. A181519", timesnewroman9);
 
-            Paragraph par5 = new Paragraph("ISCRITTA ALL’ALBO AUTOTRASPORTATORI PER CONTO TERZI N°. NA6614252P", helvetica9);
+            Paragraph par5 = new Paragraph("ISCRITTA ALL’ALBO AUTOTRASPORTATORI PER CONTO TERZI N°. NA6614252P", timesnewroman9);
 
-            Paragraph par6 = new Paragraph("TEL/FAX 081.759.95.34 -CELL. 32871.25.542 – 320.07.55.294", helvetica9);
+            Paragraph par6 = new Paragraph("TEL/FAX 081.759.95.34 -CELL. 32871.25.542 – 320.07.55.294", timesnewroman9);
         
             par1.Alignment = 1;
             par2.Alignment = 1;
@@ -129,20 +160,33 @@ namespace ProgettStampaFatture.PDFGenerator
             oggettoTable.SpacingBefore = SpacingBefore;
             oggettoTable.SpacingAfter = SpacingAfter;
 
-            Font helvetica9 = new Font(Font.FontFamily.HELVETICA, 9f, Font.NORMAL);
+            Font timesnewroman9 = new Font(Font.FontFamily.TIMES_ROMAN, 9f, Font.NORMAL);
 
-            Paragraph par1 = new Paragraph("Numero", helvetica9);
-            Paragraph par2 = new Paragraph("Data", helvetica9);
-            Paragraph par3 = new Paragraph("Spett.le", helvetica9);
-            Paragraph par4 = new Paragraph("Causale", helvetica9);
+            Phrase par0 = new Phrase("FATTURA", timesnewroman9);
+            Phrase par1 = new Phrase("Numero", timesnewroman9);
+            Phrase par2 = new Phrase("Data", timesnewroman9);
+            Phrase par3 = new Phrase("Spett.le", timesnewroman9);
+            Phrase par4 = new Phrase("Causale", timesnewroman9);
 
 
 
             PdfPCell cell;
 
+
+            cell = new PdfPCell(par0);
+            cell.Border = Rectangle.NO_BORDER;
+            cell.BackgroundColor = new BaseColor(210, 210, 210);
+
+            oggettoTable.AddCell(cell);
+
             cell = new PdfPCell();
             cell.Border = Rectangle.NO_BORDER;
-            cell.AddElement(par1);
+            cell.Colspan = 3;
+
+            oggettoTable.AddCell(cell);
+
+            cell = new PdfPCell(par1);
+            cell.Border = Rectangle.NO_BORDER;
 
             oggettoTable.AddCell(cell);
 
@@ -150,7 +194,7 @@ namespace ProgettStampaFatture.PDFGenerator
             if ((fatturaToParse != null) || (fatturaToParse.Numero != 0))
                 numeroFattura = fatturaToParse.Numero.ToString();
 
-            cell = new PdfPCell(new Phrase(numeroFattura, helvetica9));
+            cell = new PdfPCell(new Phrase(numeroFattura, timesnewroman9));
             cell.Border = Rectangle.NO_BORDER;
 
             oggettoTable.AddCell(cell);
@@ -161,14 +205,15 @@ namespace ProgettStampaFatture.PDFGenerator
             oggettoTable.AddCell(cell);
 
             cell = new PdfPCell();
-            cell.BackgroundColor = new BaseColor(210, 210, 210);
-            cell.Rowspan = 4;
+            
 
             String intestatario = "";
 
             if ((fatturaToParse != null) || (fatturaToParse.Intestatario != null))
                 intestatario = fatturaToParse.Intestatario;
-            cell.AddElement(new Phrase(intestatario, helvetica9));
+            cell.AddElement(new Phrase(intestatario, timesnewroman9));
+            cell.BackgroundColor = new BaseColor(210, 210, 210);
+            cell.Rowspan = 4;
 
             oggettoTable.AddCell(cell);
 
@@ -176,32 +221,32 @@ namespace ProgettStampaFatture.PDFGenerator
 
             cell = new PdfPCell(par2);
             cell.Border = Rectangle.NO_BORDER;
+            cell.Rowspan = 1;
 
             oggettoTable.AddCell(cell);
 
-            cell = new PdfPCell();
-            cell.Border = Rectangle.NO_BORDER;
 
             String data = "";
 
             if ((fatturaToParse != null) || (fatturaToParse.Data != null))
                 data = fatturaToParse.Data.ToShortDateString();
-            cell.AddElement(new Phrase(data, helvetica9));
+            cell = new PdfPCell(new Phrase(data, timesnewroman9));
+            cell.Border = Rectangle.NO_BORDER;
 
             oggettoTable.AddCell(cell);
 
-            cell = new PdfPCell();
+            cell = new PdfPCell(new Phrase("", timesnewroman9));
             cell.Border = Rectangle.NO_BORDER;
             oggettoTable.AddCell(cell);
 
-            cell = new PdfPCell();
+            cell = new PdfPCell(new Phrase("", timesnewroman9));
             cell.Border = Rectangle.NO_BORDER;
 
             cell.Colspan = 3;
 
             oggettoTable.AddCell(cell);
 
-            cell = new PdfPCell();
+            cell = new PdfPCell(new Phrase("", timesnewroman9));
             cell.Border = Rectangle.NO_BORDER;
 
             cell.Colspan = 3;
@@ -226,7 +271,7 @@ namespace ProgettStampaFatture.PDFGenerator
             if ((fatturaToParse != null) || (fatturaToParse.Causale != null))
                 causale = fatturaToParse.Causale;
 
-            cell.AddElement(new Phrase(causale, helvetica9));
+            cell.AddElement(new Phrase(causale, timesnewroman9));
 
             oggettoTable.AddCell(cell);
 
@@ -253,7 +298,7 @@ namespace ProgettStampaFatture.PDFGenerator
 
             List<String> headers = new List<string>() { "Bolla", "Pr.", "Data", "Valore\nTrasporto", "%Nolo", "Imponibile", "%IVA", "Importo\nIVA", "Totale\nCorrispettivo" };
             
-            Font helvetica10 = new Font(Font.FontFamily.HELVETICA, 8, Font.NORMAL);
+            Font helvetica10 = new Font(Font.FontFamily.TIMES_ROMAN, 9f, Font.NORMAL);
 
             foreach (String header in headers)
             {
@@ -306,21 +351,21 @@ namespace ProgettStampaFatture.PDFGenerator
             conclusioneTable.SpacingAfter = SpacingAfter;
 
 
-            Font helvetica9 = new Font(Font.FontFamily.HELVETICA, 9f, Font.NORMAL);
+            Font timesnewroman9 = new Font(Font.FontFamily.TIMES_ROMAN, 9f, Font.NORMAL);
 
-            Paragraph modalita = new Paragraph("MODALITA' DI PAGAMENTO: RIMESSA DIRETTA A 30GG. DATA FATTURA CON:", helvetica9);
-            Paragraph bonifico = new Paragraph("BONIFICO", helvetica9);
-            Paragraph contanti = new Paragraph("CONTANTI", helvetica9);
-            Paragraph assegno = new Paragraph("ASSEGNO", helvetica9);
-            Paragraph iban = new Paragraph("IBAN PER BONIFICO: IT 10 M 01030 03421 000007804964", helvetica9);
-            Paragraph ccn = new Paragraph("CCN° 000007804964", helvetica9);
-            Paragraph istituto = new Paragraph("ISTITUTO BANCARIO: MONTE DEI PASCHI DI SIENA AG. 21", helvetica9);
-            Paragraph abi = new Paragraph("ABI: 01030", helvetica9);
-            Paragraph cab = new Paragraph("CAB: 03421", helvetica9);
-            Paragraph cin = new Paragraph("CIN: M", helvetica9);
-            Paragraph intestatario = new Paragraph("INTESTATO A: AUTOTRASPORTI NEAPOLIS SOCIETA' COOPERATIVA", helvetica9);
+            Paragraph modalita = new Paragraph("MODALITA' DI PAGAMENTO: RIMESSA DIRETTA A 30GG. DATA FATTURA CON:", timesnewroman9);
+            Paragraph bonifico = new Paragraph("BONIFICO", timesnewroman9);
+            Paragraph contanti = new Paragraph("CONTANTI", timesnewroman9);
+            Paragraph assegno = new Paragraph("ASSEGNO", timesnewroman9);
+            Paragraph iban = new Paragraph("IBAN PER BONIFICO: IT 10 M 01030 03421 000007804964", timesnewroman9);
+            Paragraph ccn = new Paragraph("CCN° 000007804964", timesnewroman9);
+            Paragraph istituto = new Paragraph("ISTITUTO BANCARIO: MONTE DEI PASCHI DI SIENA AG. 21", timesnewroman9);
+            Paragraph abi = new Paragraph("ABI: 01030", timesnewroman9);
+            Paragraph cab = new Paragraph("CAB: 03421", timesnewroman9);
+            Paragraph cin = new Paragraph("CIN: M", timesnewroman9);
+            Paragraph intestatario = new Paragraph("INTESTATO A: AUTOTRASPORTI NEAPOLIS SOCIETA' COOPERATIVA", timesnewroman9);
 
-            Paragraph totali = new Paragraph("TOTALI GENERALI", helvetica9);
+            Paragraph totali = new Paragraph("TOTALI GENERALI", timesnewroman9);
 
             PdfPCell cell;
 
@@ -337,16 +382,16 @@ namespace ProgettStampaFatture.PDFGenerator
                 }
             }
 
-            Paragraph valoreTrasportoTot = new Paragraph("Valore \n Trasporto", helvetica9);
-            Paragraph imponibileTot = new Paragraph("Imponibile", helvetica9);
-            Paragraph importoIvaTot = new Paragraph("Importo \n IVA", helvetica9);
-            Paragraph totaleCorrispettivoTot = new Paragraph("Totale \n Corrispettivo", helvetica9);
+            Paragraph valoreTrasportoTot = new Paragraph("Valore \n Trasporto", timesnewroman9);
+            Paragraph imponibileTot = new Paragraph("Imponibile", timesnewroman9);
+            Paragraph importoIvaTot = new Paragraph("Importo \n IVA", timesnewroman9);
+            Paragraph totaleCorrispettivoTot = new Paragraph("Totale \n Corrispettivo", timesnewroman9);
 
 
-            Paragraph valoreTrasportoTotalePar = new Paragraph(valoreTrasportoTotale.ToString("0.00\\€"), helvetica9);
-            Paragraph imponibileTotalePar = new Paragraph(imponibileTotale.ToString("0.00\\€"), helvetica9);
-            Paragraph importoIvaTotalePar = new Paragraph(importoIvaTotale.ToString("0.00\\€"), helvetica9);
-            Paragraph totaleCorrispettivoTotalePar = new Paragraph(totaleCorrispettivoTotale.ToString("0.00\\€"), helvetica9);
+            Paragraph valoreTrasportoTotalePar = new Paragraph(valoreTrasportoTotale.ToString("0.00\\€"), timesnewroman9);
+            Paragraph imponibileTotalePar = new Paragraph(imponibileTotale.ToString("0.00\\€"), timesnewroman9);
+            Paragraph importoIvaTotalePar = new Paragraph(importoIvaTotale.ToString("0.00\\€"), timesnewroman9);
+            Paragraph totaleCorrispettivoTotalePar = new Paragraph(totaleCorrispettivoTotale.ToString("0.00\\€"), timesnewroman9);
 
             cell = new PdfPCell(modalita);
             cell.Border = Rectangle.TOP_BORDER;
