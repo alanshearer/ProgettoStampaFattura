@@ -58,6 +58,10 @@
             this.label9 = new System.Windows.Forms.Label();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.stampaFatturaButton = new System.Windows.Forms.Button();
+            this.label10 = new System.Windows.Forms.Label();
+            this.bonificoCheckBox = new System.Windows.Forms.CheckBox();
+            this.contantiCheckBox = new System.Windows.Forms.CheckBox();
+            this.assegnoCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trasportoBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -67,7 +71,7 @@
             this.intestazioneFatturaTextBox.Location = new System.Drawing.Point(530, 23);
             this.intestazioneFatturaTextBox.Multiline = true;
             this.intestazioneFatturaTextBox.Name = "intestazioneFatturaTextBox";
-            this.intestazioneFatturaTextBox.Size = new System.Drawing.Size(338, 61);
+            this.intestazioneFatturaTextBox.Size = new System.Drawing.Size(242, 61);
             this.intestazioneFatturaTextBox.TabIndex = 0;
             this.intestazioneFatturaTextBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
@@ -96,9 +100,9 @@
             this.importoIVADataGridViewTextBoxColumn,
             this.totaleCorrispettivoDataGridViewTextBoxColumn});
             this.dataGridView1.DataSource = this.trasportoBindingSource;
-            this.dataGridView1.Location = new System.Drawing.Point(26, 145);
+            this.dataGridView1.Location = new System.Drawing.Point(22, 147);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(842, 223);
+            this.dataGridView1.Size = new System.Drawing.Size(750, 255);
             this.dataGridView1.TabIndex = 2;
             this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             this.dataGridView1.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridView1_CellFormatting);
@@ -173,17 +177,16 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(195, 384);
+            this.label2.Location = new System.Drawing.Point(75, 494);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(85, 13);
             this.label2.TabIndex = 3;
             this.label2.Text = "Valore Trasporto";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(195, 410);
+            this.label3.Location = new System.Drawing.Point(75, 520);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(54, 13);
             this.label3.TabIndex = 4;
@@ -192,7 +195,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(449, 410);
+            this.label4.Location = new System.Drawing.Point(329, 520);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(98, 13);
             this.label4.TabIndex = 6;
@@ -201,17 +204,16 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(449, 384);
+            this.label5.Location = new System.Drawing.Point(329, 494);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(62, 13);
             this.label5.TabIndex = 5;
             this.label5.Text = "Importo IVA";
-            this.label5.Click += new System.EventHandler(this.label5_Click);
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(23, 384);
+            this.label6.Location = new System.Drawing.Point(23, 465);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(102, 13);
             this.label6.TabIndex = 7;
@@ -220,7 +222,7 @@
             // valoreTrasportoTotale
             // 
             this.valoreTrasportoTotale.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.valoreTrasportoTotale.Location = new System.Drawing.Point(306, 377);
+            this.valoreTrasportoTotale.Location = new System.Drawing.Point(186, 487);
             this.valoreTrasportoTotale.Name = "valoreTrasportoTotale";
             this.valoreTrasportoTotale.ReadOnly = true;
             this.valoreTrasportoTotale.Size = new System.Drawing.Size(118, 20);
@@ -229,7 +231,7 @@
             // imponibileTotale
             // 
             this.imponibileTotale.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.imponibileTotale.Location = new System.Drawing.Point(306, 403);
+            this.imponibileTotale.Location = new System.Drawing.Point(186, 513);
             this.imponibileTotale.Name = "imponibileTotale";
             this.imponibileTotale.ReadOnly = true;
             this.imponibileTotale.Size = new System.Drawing.Size(118, 20);
@@ -238,7 +240,7 @@
             // totaleCorrispettivoTotale
             // 
             this.totaleCorrispettivoTotale.BackColor = System.Drawing.SystemColors.HighlightText;
-            this.totaleCorrispettivoTotale.Location = new System.Drawing.Point(572, 403);
+            this.totaleCorrispettivoTotale.Location = new System.Drawing.Point(452, 513);
             this.totaleCorrispettivoTotale.Name = "totaleCorrispettivoTotale";
             this.totaleCorrispettivoTotale.ReadOnly = true;
             this.totaleCorrispettivoTotale.Size = new System.Drawing.Size(118, 20);
@@ -247,7 +249,7 @@
             // importoIvaTotale
             // 
             this.importoIvaTotale.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.importoIvaTotale.Location = new System.Drawing.Point(572, 377);
+            this.importoIvaTotale.Location = new System.Drawing.Point(452, 487);
             this.importoIvaTotale.Name = "importoIvaTotale";
             this.importoIvaTotale.ReadOnly = true;
             this.importoIvaTotale.Size = new System.Drawing.Size(118, 20);
@@ -285,7 +287,7 @@
             this.causaleTextBox.BackColor = System.Drawing.SystemColors.HighlightText;
             this.causaleTextBox.Location = new System.Drawing.Point(140, 95);
             this.causaleTextBox.Name = "causaleTextBox";
-            this.causaleTextBox.Size = new System.Drawing.Size(728, 20);
+            this.causaleTextBox.Size = new System.Drawing.Size(632, 20);
             this.causaleTextBox.TabIndex = 19;
             // 
             // label9
@@ -307,7 +309,7 @@
             // stampaFatturaButton
             // 
             this.stampaFatturaButton.ImageKey = "(nessuno)";
-            this.stampaFatturaButton.Location = new System.Drawing.Point(741, 377);
+            this.stampaFatturaButton.Location = new System.Drawing.Point(621, 487);
             this.stampaFatturaButton.Name = "stampaFatturaButton";
             this.stampaFatturaButton.Size = new System.Drawing.Size(127, 47);
             this.stampaFatturaButton.TabIndex = 13;
@@ -315,11 +317,54 @@
             this.stampaFatturaButton.UseVisualStyleBackColor = true;
             this.stampaFatturaButton.Click += new System.EventHandler(this.stampaFatturaButton_Click);
             // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(23, 415);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(135, 13);
+            this.label10.TabIndex = 21;
+            this.label10.Text = "MODALITA\' PAGAMENTO";
+            // 
+            // bonificoCheckBox
+            // 
+            this.bonificoCheckBox.AutoSize = true;
+            this.bonificoCheckBox.Location = new System.Drawing.Point(211, 414);
+            this.bonificoCheckBox.Name = "bonificoCheckBox";
+            this.bonificoCheckBox.Size = new System.Drawing.Size(76, 17);
+            this.bonificoCheckBox.TabIndex = 22;
+            this.bonificoCheckBox.Text = "BONIFICO";
+            this.bonificoCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // contantiCheckBox
+            // 
+            this.contantiCheckBox.AutoSize = true;
+            this.contantiCheckBox.Location = new System.Drawing.Point(368, 414);
+            this.contantiCheckBox.Name = "contantiCheckBox";
+            this.contantiCheckBox.Size = new System.Drawing.Size(81, 17);
+            this.contantiCheckBox.TabIndex = 23;
+            this.contantiCheckBox.Text = "CONTANTI";
+            this.contantiCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // assegnoCheckBox
+            // 
+            this.assegnoCheckBox.AutoSize = true;
+            this.assegnoCheckBox.Location = new System.Drawing.Point(530, 414);
+            this.assegnoCheckBox.Name = "assegnoCheckBox";
+            this.assegnoCheckBox.Size = new System.Drawing.Size(78, 17);
+            this.assegnoCheckBox.TabIndex = 24;
+            this.assegnoCheckBox.Text = "ASSEGNO";
+            this.assegnoCheckBox.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(900, 443);
+            this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.assegnoCheckBox);
+            this.Controls.Add(this.contantiCheckBox);
+            this.Controls.Add(this.bonificoCheckBox);
+            this.Controls.Add(this.label10);
             this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.causaleTextBox);
             this.Controls.Add(this.label9);
@@ -380,6 +425,10 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private System.Windows.Forms.Button stampaFatturaButton;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.CheckBox bonificoCheckBox;
+        private System.Windows.Forms.CheckBox contantiCheckBox;
+        private System.Windows.Forms.CheckBox assegnoCheckBox;
     }
 }
 

@@ -396,24 +396,77 @@ namespace ProgettStampaFatture.PDFGenerator
             cell = new PdfPCell(modalita);
             cell.Border = Rectangle.TOP_BORDER;
             cell.Colspan = 6;
-            conclusioneTable.AddCell(cell);            
-
-
-            //PdfTemplate template = writer.DirectContent.CreateTemplate(20,20);
-            cell = new PdfPCell(new Phrase(" "));
-            cell.Border = Rectangle.BOX;
             conclusioneTable.AddCell(cell);
 
 
-            //PdfTemplate template = writer.DirectContent.CreateTemplate(20,20);
-            cell = new PdfPCell(new Phrase(" "));
-            cell.Border = Rectangle.BOX;
+            Font timesnewroman20 = new Font(Font.FontFamily.TIMES_ROMAN, 20f, Font.BOLD);
+
+            PdfPTable NoChoiceTable = new PdfPTable(4);
+            PdfPCell NoChoicheTableCell = new PdfPCell(new Phrase(" ", timesnewroman20));
+            NoChoicheTableCell.Border = Rectangle.NO_BORDER;
+            NoChoiceTable.AddCell(NoChoicheTableCell);
+            NoChoicheTableCell.Border = Rectangle.BOX;
+            NoChoiceTable.AddCell(NoChoicheTableCell);
+            NoChoicheTableCell.Border = Rectangle.NO_BORDER;
+            NoChoiceTable.AddCell(NoChoicheTableCell);
+            NoChoicheTableCell.Border = Rectangle.NO_BORDER;
+            NoChoiceTable.AddCell(NoChoicheTableCell);
+
+
+            PdfPTable ChoiceTable = new PdfPTable(4);
+            PdfPCell ChoicheTableCell = new PdfPCell(new Phrase(" ", timesnewroman20));
+            ChoicheTableCell.Border = Rectangle.NO_BORDER;
+            ChoiceTable.AddCell(ChoicheTableCell);
+            ChoicheTableCell = new PdfPCell(new Phrase("X", timesnewroman20));
+            ChoicheTableCell.Border = Rectangle.BOX;
+            ChoiceTable.AddCell(ChoicheTableCell);
+            ChoicheTableCell = new PdfPCell(new Phrase(" ", timesnewroman20));
+            ChoicheTableCell.Border = Rectangle.NO_BORDER;
+            ChoiceTable.AddCell(ChoicheTableCell);
+            ChoicheTableCell.Border = Rectangle.NO_BORDER;
+            ChoiceTable.AddCell(ChoicheTableCell);
+
+
+            // CELLA SPUNTA BONIFICO
+
+            if (fatturaToParse.Pagamenti.Contains(Pagamento.Bonifico))
+            {
+                cell = new PdfPCell(ChoiceTable);
+            }
+            else
+            {
+                cell = new PdfPCell(NoChoiceTable);
+            }
+
+            cell.Border = Rectangle.NO_BORDER;
             conclusioneTable.AddCell(cell);
 
-  
-             //PdfTemplate template = writer.DirectContent.CreateTemplate(20,20);
-            cell = new PdfPCell(new Phrase(" "));
-            cell.Border = Rectangle.BOX;
+            // CELLA SPUNTA CONTANTI
+
+            if (fatturaToParse.Pagamenti.Contains(Pagamento.Contanti))
+            {
+                cell = new PdfPCell(ChoiceTable);
+            }
+            else
+            {
+                cell = new PdfPCell(NoChoiceTable);
+            }
+
+            cell.Border = Rectangle.NO_BORDER;
+            conclusioneTable.AddCell(cell);
+
+
+            // CELLA SPUNTA ASSEGNO
+
+            if (fatturaToParse.Pagamenti.Contains(Pagamento.Assegno))
+            {
+                cell = new PdfPCell(ChoiceTable);
+            }
+            else
+            {
+                cell = new PdfPCell(NoChoiceTable);
+            }
+            cell.Border = Rectangle.NO_BORDER;
             conclusioneTable.AddCell(cell);
 
             cell = new PdfPCell();

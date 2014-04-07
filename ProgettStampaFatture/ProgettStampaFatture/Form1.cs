@@ -143,15 +143,6 @@ namespace ProgettoStampaFatture
 
         }
 
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label5_Click(object sender, EventArgs e)
-        {
-
-        }
 
 
         private void dataFatturaTextBox_TextChanged(object sender, EventArgs e)
@@ -230,7 +221,22 @@ namespace ProgettoStampaFatture
 
             }
 
+            if (bonificoCheckBox.Checked)
+            {
+                fatturaToPass.Pagamenti.Add(Pagamento.Bonifico);
+            }
+            if (contantiCheckBox.Checked)
+            {
+                fatturaToPass.Pagamenti.Add(Pagamento.Contanti);
+            }
+            if (assegnoCheckBox.Checked)
+            {
+                fatturaToPass.Pagamenti.Add(Pagamento.Assegno);
+            }
+
             pdfGenerator.StampaFattura(fatturaToPass);
         }
+
+
     }
 }
